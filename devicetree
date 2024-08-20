@@ -1,0 +1,55 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = "brcm,bcm2835";
+
+    fragment@0 {
+        target = <&spidev0>;
+        __overlay__ {
+            status = "disabled";
+        };
+    };
+
+    fragment@1 {
+        target = <&spi0>;
+        __overlay__ {
+            status = "okay";
+            #address-cells = <1>;
+            #size-cells = <0>;
+
+            tft@0 {
+                compatible = "yourcompany,tft";
+                reg = <0>; // Chip Select 0
+                spi-max-frequency = <30000000>;
+                spi-cpha;
+                spi-cpol;
+                status = "okay";
+            };
+        };
+    };
+
+    fragment@2 {
+        target = <&gpio>;
+        __overlay__ {
+            mygpio_led: mygpio_led {
+                compatible = "gpio-gpio";
+                gpio = <&gpio_led>;
+                output-low;
+                status = "okay";
+            };
+            mygpio_a0: mygpio_a0 {
+                compatible = "gpio-gpio";
+                gpio = <&gpio_a0>;
+                output-low;
+                status = "okay";
+            };
+        };
+    };
+    
+      overrides__ {
+        gpio_led = <&mygpio_led>;
+        gpio_a0 = <&mygpio_a0>;
+    };
+};
+
